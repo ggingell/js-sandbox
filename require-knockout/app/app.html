@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script data-main="scripts/main" src="scripts/require-jquery.js"></script>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<style type="text/css">
+
+		div#description {
+			border: 1px solid rgb(255, 204, 0);
+			padding: 1em;
+			margin:1em 0;
+		}
+
+		div#wrapper {
+			border: 1px solid #444; 
+			width: 30%; 
+			margin: 4em auto; 
+			padding: 2em;
+		}
+
+	</style>
+</head>
+<body>
+	
+	<div id="wrapper">
+		
+		<h2 id="what" data-bind="text: theTitle"></h2>
+		<div id="description" data-bind="text: description"></div>
+		<label for="filter">Filter String: </label>
+		<input type="text" id="filter" name="filter" value="" data-bind="value: filter, valueUpdate: ['afterkeydown']" />
+		
+		<ul>
+			<!-- ko foreach: filteredItems -->
+			<li data-bind="text: name"></li>
+			<!-- /ko -->
+		</ul>
+		
+	</div>
+	
+</body>
+</html>
