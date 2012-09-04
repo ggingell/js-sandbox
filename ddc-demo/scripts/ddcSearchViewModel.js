@@ -86,7 +86,7 @@ function ddSearchViewModel() {
     self.ddcCurrentClass = ko.observable();
     self.ddcCurrentDivision = ko.observable();
     self.ddcSections = ko.observable("");
-    // @TODO This should Ideally be loaded via Ajax:
+    // @TODO This could be loaded via Ajax, but it is also faster to include the inital choices
     self.ddcClasses = [
         {"code":  "000", "description": "Computer science, information & general works"},
         {"code":  "100", "description": "Philosophy and psychology"},
