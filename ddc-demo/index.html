@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Dewey Decimal Browser | Grant Gingell</title>
+	<script src="scripts/jquery-1.8.0.min"></script>
+	<script src="scripts/knockout-2.1.0.js"></script>
+	<script src="scripts/ddcSearchViewModel.js"></script>
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<style>
+
+		body {
+			font-family: Helvetica, Arial, sans-serif; 
+			font-size: 16px;
+			letter-spacing: -0.05em;
+		}
+
+		form {
+			padding: .68em 0;
+		}
+
+		form input.text {
+			border: 1px solid #888;
+			padding: .32em;
+			font-size: 1em;
+
+			border-radius: 2px;
+			box-shadow: inset 0 1px 2px #ccc;
+			-moz-box-shadow: inset 0 1px 2px #ccc;
+			-webkit-box-shadow: inset 0 1px 2px #ccc;
+
+		}
+
+		form input.text:focus {
+			border: 1px solid rgb(3, 178, 223);	
+		}
+
+		#wrapper {
+			border:1px solid #444;
+			width: 640px; 
+			margin: 1em auto; 
+			padding: 2em; 
+			position:relative; 
+		}
+
+		footer {
+			width: 640px; 
+			margin: 1em auto; 
+			text-align: center; 
+			color: #888;
+		}
+
+		#ddc_browser {
+
+			height: 26.875em;
+			border: 1px solid #c8c8c8;
+			border-bottom: none;
+		}
+
+	  ul, li {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		#ddc_browser a,
+		#ddc_browser a:visited {
+			text-decoration: none;
+			padding: .67em;
+			display: block;
+		}
+
+		#ddc_browser a:hover {
+			background: #eee;
+		}
+
+		ul.classes ul li,
+		ul.divisions ul li {
+			border-bottom: 1px solid #CCCCCC;
+		}
+
+		#ddc_browser ul li ul li span,
+		form label {
+
+			color: #666;
+			font-size: .87em;
+		}
+
+		ul.sections li ul li ul li.section {
+			padding: .67em;
+			border-bottom: 1px solid #CCCCCC;
+		}
+
+		ul.sections li ul li {
+			padding: 0;
+		}
+
+		li.section:hover {
+			background: rgb(176, 216, 3);
+		}
+
+		li.section:hover span {
+			color: #fff !important ;
+			text-shadow: rgb(144, 184, 3);
+		}
+
+		#ddc_browser header {
+			padding: .68em;
+			line-height: 1.5em;
+			background-color: rgb(3, 178, 223);
+			overflow: auto;
+		}
+
+		#ddc_browser header button {
+			float: left;
+			margin-right: .68em;
+		}
+
+		#ddc_browser header span {
+
+			font-size: 1em;
+			line-height: 1.87em;
+			color: #fff;
+		}
+
+		#load-notice {
+
+			padding: .87em;
+			position: absolute;
+			top: 0;
+			right: 0;
+
+			font-size: .87em;
+			background: rgb(223, 3, 3);
+			color: #fff;
+		}
+
+	</style>
+</head>
+<body>
+	
+	<div id="wrapper">
+
+		<div id="load-notice" style="display: none;">loading</div>
+		
+		<h1>Dewey Decimal Browser</h1>
+
+			<form>
+				<label for="chosen-dewey">Chosen Dewey: </label>
+				<input type="text" name="chosen-dewey" id="chosen-dewey" placeholder="000" maxlength="3" size="3" class="text" />	
+			</form>
+
+			<!-- The View -->
+			<div id="ddc_browser" class="widget"> 
+			                      
+			  <div id="ddc_results">
+			    
+			    <ul class="classes">
+			      <li>
+			        <header>
+			          <span>Dewey Decimal</span>
+			        </header>
+			        <ul data-bind="foreach: $root.ddcClasses">
+			          <li>
+			          		<a href="#" data-bind="click: $root.showClassChildren">
+			              	<span><strong data-bind="text: code"></strong></span>&nbsp;<span data-bind="text: description"></span>
+			              </a>
+			          </li>
+			        </ul>
+			      </li>
+			    </ul>
+			    
+			    <ul data-bind="foreach: $root.ddcClass" class="divisions">
+			      <li>
+			        <header>
+			          <button class="small glyph back_bl" tab-index="0" data-bind="click: $root.showClasses">&larr; Back</button>
+			          <span data-bind="text: code"></span>&nbsp;
+			          <span data-bind="text: description" class="description"></span>
+			        </header>
+			          <ul data-bind="foreach: children">
+			            <li class="division">
+			                 <a class="slidertoggle" href="#" data-bind="click: $root.showDivisionChildren">
+			                  <span><strong data-bind="text: code"></strong></span>&nbsp;
+			                  <span data-bind="text: description"></span>
+			                 </a>
+			            </li>
+			          </ul>
+			      </li>
+			    </ul>
+			    <ul data-bind="with: $root.ddcSections" class="sections">
+			      <li>
+			        <header>
+			          <button class="small glyph back_bl" tab-index="0" data-bind="click: $root.backToClass">&larr; Back</button>
+			          <span data-bind="text: code"></span>&nbsp;
+			          <span data-bind="text: description"></span>
+			        </header>
+			        <ul>
+			          <li>
+			            <ul data-bind="foreach: children">
+			              <li class="section" data-bind="click: $root.selectSection">
+			                <span><strong data-bind="text: code"></strong></span>&nbsp;
+			                <span data-bind="text: description"></span>
+			              
+			              </li>
+			            </ul>
+			          </li>
+			        </ul>
+			      </li>
+			    </ul>
+			  </div>
+			</div>
+	</div>
+
+	<footer>
+		Grant Gingell 2012
+	</footer>
+
+	<script>	
+		// Allows us to use multiple ModelViews on a single page:
+		ko.applyBindings(new ddSearchViewModel, $("#ddc_browser")[0]);
+	</script>
+
+	
+</body>
+</html>
